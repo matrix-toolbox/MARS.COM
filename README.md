@@ -7,6 +7,6 @@ Original code has been disassembled, rewritten and reduced from **5649** bytes t
 
 **Tim, if you read this, please contact me! I was trying to reach you, but I couldn't...**
 
-![MARS]([[http://url/to/img.png](https://raw.githubusercontent.com/matrix-toolbox/MARS.COM/main/mars_4_3.png)](https://raw.githubusercontent.com/matrix-toolbox/MARS.COM/main/mars_4_3.png))
+![MARS](https://raw.githubusercontent.com/matrix-toolbox/MARS.COM/main/mars_4_3.png)
 
 More details can be found [here](https://chaos.if.uj.edu.pl/~wojtek/MARS).
