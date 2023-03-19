@@ -8,4 +8,4 @@ Original code has been disassembled, rewritten and reduced from **5649** bytes t
 
 ![MARS](https://raw.githubusercontent.com/matrix-toolbox/MARS.COM/main/mars_4_3.png)
 
-It works on DOSBOX and also on genuine x86 machines (mouse is needed). More details can be found [here](https://chaos.if.uj.edu.pl/~wojtek/MARS).
+It works on DOSBOX and also on genuine x86 machines (mouse is needed). More details can be found [here](https://chaos.if.uj.edu.pl/~wojtek/MARS.COM).
