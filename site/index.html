@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MARS — a martian landscape in 1550 bytes</title>
+<meta name="description" content="Tim J. Clarke's 1993 martian landscape renderer, disassembled and reduced to about 1.5 KB, running in your browser.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main>
+  <header>
+    <h1>MARS</h1>
+    <p class="tagline">A martian landscape renderer from 1993, in <strong>1550 bytes</strong>.</p>
+  </header>
+
+  <div id="player">
+    <div id="screen_container">
+      <div class="v86-text"></div>
+      <canvas></canvas>
+    </div>
+    <p id="status" class="notice">Booting FreeDOS&hellip;</p>
+    <noscript><p class="notice">This demo needs JavaScript to run the emulator.</p></noscript>
+  </div>
+
+  <p class="hint">
+    Click the screen to capture your mouse &mdash; moving it pans the camera.
+    Press <kbd>Esc</kbd> to release.
+  </p>
+
+  <section>
+    <h2>What this is</h2>
+    <p>
+      In 1993 <strong>Tim J. Clarke</strong> wrote a real-time martian landscape
+      renderer that fit in a 5649-byte DOS executable. In 2021
+      <strong>Wojciech Bruzda</strong> disassembled it, rewrote it, and reduced it
+      to roughly a tenth of that size &mdash; the binary running above is
+      assembled from that annotated source.
+    </p>
+    <p>
+      It draws into VGA mode 13h, reprograms the palette DAC directly, and needs
+      32-bit registers, so it requires a 386 or better. Rather than emulate DOS,
+      this page boots an actual FreeDOS floppy on an emulated PC.
+    </p>
+  </section>
+
+  <footer>
+    <ul class="links">
+      <li><a href="MARS.ASM">Read the annotated assembly</a></li>
+      <li><a href="MARS.COM" download>Download MARS.COM (1550 bytes)</a></li>
+      <li><a href="https://github.com/matrix-toolbox/MARS.COM">This repository</a></li>
+      <li><a href="https://chaos.if.uj.edu.pl/~wojtek/MARS.COM">The author's write-up</a></li>
+    </ul>
+    <p class="legal">
+      Original renderer by Tim J. Clarke, 1993. Disassembly and size reduction by
+      Wojciech Bruzda, 2021. Source released under GPL-3.0. Emulation by v86,
+      booting FreeDOS with the CuteMouse driver.
+    </p>
+  </footer>
+</main>
+
+<script src="v86/libv86.js"></script>
+<script>
+  (function () {
+    var statusEl = document.getElementById("status");
+    var container = document.getElementById("screen_container");
+
+    function say(message, isError) {
+      statusEl.textContent = message;
+      statusEl.hidden = false;
+      statusEl.classList.toggle("is-error", !!isError);
+    }
+
+    function hideStatus() {
+      statusEl.hidden = true;
+    }
+
+    if (typeof V86 !== "function") {
+      say("Could not load the emulator. Try reloading the page.", true);
+      return;
+    }
+
+    var emulator;
+    try {
+      emulator = new V86({
+        wasm_path: "v86/v86.wasm",
+        memory_size: 32 * 1024 * 1024,
+        vga_memory_size: 2 * 1024 * 1024,
+        screen_container: container,
+        bios: { url: "v86/bios/seabios.bin" },
+        vga_bios: { url: "v86/bios/vgabios.bin" },
+        fda: { url: "mars.img" },
+        autostart: true
+      });
+    } catch (e) {
+      say("The emulator failed to start: " + e.message, true);
+      return;
+    }
+
+    // Once the program switches to graphics mode we are past the DOS boot,
+    // so the status line has done its job.
+    emulator.add_listener("screen-set-mode", function (isGraphical) {
+      if (isGraphical) hideStatus();
+    });
+
+    emulator.add_listener("emulator-started", function () {
+      say("Loading MARS…");
+    });
+
+    // v86 delivers relative mouse motion only while the pointer is locked,
+    // which is exactly what int 33h wants.
+    container.addEventListener("click", function () {
+      if (container.requestPointerLock) container.requestPointerLock();
+    });
+
+    document.addEventListener("pointerlockchange", function () {
+      var locked = document.pointerLockElement === container;
+      if (emulator.mouse_set_status) emulator.mouse_set_status(locked);
+      container.classList.toggle("is-locked", locked);
+    });
+  })();
+</script>
+
+</body>
+</html>

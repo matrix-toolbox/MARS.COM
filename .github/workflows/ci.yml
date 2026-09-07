@@ -1,0 +1,50 @@
+name: Build MARS.COM
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache the JWasm toolchain
+        uses: actions/cache@v4
+        with:
+          path: .toolchain
+          key: jwasm-${{ hashFiles('versions.env') }}
+
+      - name: Install mtools (needed to build the FreeDOS floppy image)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq mtools
+
+      - name: Assemble MARS.COM and verify reproducibility
+        run: bash scripts/build.sh --check
+
+      - name: Run the test suite
+        run: bash tests/run-tests.sh
+
+      - name: Report size and checksum
+        run: |
+          size=$(wc -c < build/MARS.COM | tr -d ' ')
+          sha=$(sha256sum build/MARS.COM | cut -d' ' -f1)
+          {
+            echo "### MARS.COM"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Size | $size bytes |"
+            echo "| SHA-256 | \`$sha\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MARS.COM
+          path: build/MARS.COM
+          if-no-files-found: error

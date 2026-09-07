@@ -1,0 +1,13 @@
+# Build outputs — MARS.ASM is the single source of truth
+build/
+_site/
+.toolchain/
+MARS.COM
+*.jsdos
+
+# Fetched dependencies
+node_modules/
+*.tgz
+
+# OS turds
+.DS_Store
