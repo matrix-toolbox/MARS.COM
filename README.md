@@ -13,5 +13,5 @@ It works on DOSBOX and also on genuine x86 machines (mouse is needed). More deta
 ---
 
 Follow-up projects:
-- Elias Konstantinidis created an SDL port: https://github.com/ekondis/mars-sdl
-- Michał Pasternak prepared a browser-playable version: https://github.com/dtz-labs/MARS.COM
+- (2026) Elias Konstantinidis created an SDL port: https://github.com/ekondis/mars-sdl
+- (2026) Michał Pasternak prepared a browser-playable version: https://github.com/dtz-labs/MARS.COM
