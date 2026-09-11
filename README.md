@@ -9,3 +9,9 @@ Original code has been disassembled, rewritten and reduced from **5649** bytes t
 ![MARS](https://raw.githubusercontent.com/matrix-toolbox/MARS.COM/main/mars_4_3.png)
 
 It works on DOSBOX and also on genuine x86 machines (mouse is needed). More details can be found [here](https://chaos.if.uj.edu.pl/~wojtek/MARS.COM).
+
+---
+
+Follow-up projects:
+- Elias Konstantinidis created an SDL port: https://github.com/ekondis/mars-sdl
+- Michał Pasternak prepared a browser-playable version: https://github.com/dtz-labs/MARS.COM
